@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"os"
 
 	"github.com/jit-y/gaff"
@@ -24,6 +25,7 @@ func run() exitCode {
 
 	_, err := cmd.ExecuteC()
 	if err != nil {
+		fmt.Fprintln(os.Stderr, err)
 		return exitErr
 	}
 
