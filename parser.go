@@ -25,9 +25,9 @@ type Strategy struct {
 }
 
 type Action struct {
-	Name         string
-	ProviderName string
-	Config       *hcl.Body
+	Name      string
+	ActorName string
+	Body      *hcl.Body
 }
 
 func NewParser(f fs.FS) *Parser {
@@ -71,9 +71,9 @@ func (p *Parser) LoadHCLFile(filepath string) (*Strategy, hcl.Diagnostics) {
 
 func decodeAction(block *hcl.Block) (*Action, hcl.Diagnostics) {
 	a := &Action{
-		Name:         block.Labels[0],
-		ProviderName: block.Labels[1],
-		Config:       &block.Body,
+		Name:      block.Labels[0],
+		ActorName: block.Labels[1],
+		Body:      &block.Body,
 	}
 
 	diags := hcl.Diagnostics{}
