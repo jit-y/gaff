@@ -14,17 +14,17 @@ type Parser struct {
 var strategySchema = &hcl.BodySchema{
 	Blocks: []hcl.BlockHeaderSchema{
 		{
-			Type:       "tactic",
-			LabelNames: []string{"provider", "name"},
+			Type:       "action",
+			LabelNames: []string{"actor", "name"},
 		},
 	},
 }
 
 type Strategy struct {
-	tactics []*Tactic
+	actions []*Action
 }
 
-type Tactic struct {
+type Action struct {
 	Name         string
 	ProviderName string
 	Config       *hcl.Body
@@ -56,11 +56,11 @@ func (p *Parser) LoadHCLFile(filepath string) (*Strategy, hcl.Diagnostics) {
 
 	for _, block := range content.Blocks {
 		switch block.Type {
-		case "tactic":
-			tactic, tacticDiags := decodeTactic(block)
+		case "action":
+			action, actionDiags := decodeAction(block)
 
-			strategy.tactics = append(strategy.tactics, tactic)
-			diags = append(diags, tacticDiags...)
+			strategy.actions = append(strategy.actions, action)
+			diags = append(diags, actionDiags...)
 		default:
 
 		}
@@ -69,8 +69,8 @@ func (p *Parser) LoadHCLFile(filepath string) (*Strategy, hcl.Diagnostics) {
 	return strategy, diags
 }
 
-func decodeTactic(block *hcl.Block) (*Tactic, hcl.Diagnostics) {
-	t := &Tactic{
+func decodeAction(block *hcl.Block) (*Action, hcl.Diagnostics) {
+	a := &Action{
 		Name:         block.Labels[0],
 		ProviderName: block.Labels[1],
 		Config:       &block.Body,
@@ -78,5 +78,5 @@ func decodeTactic(block *hcl.Block) (*Tactic, hcl.Diagnostics) {
 
 	diags := hcl.Diagnostics{}
 
-	return t, diags
+	return a, diags
 }
